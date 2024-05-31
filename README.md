@@ -2,10 +2,11 @@
 
 ### The actual working of BloodAlchemy:
 1.	Run the executable `BrDifaxpi.exe`. This is linked to the DLL `BrLogAPI.dll` which resides inside the “Brother Industry” directory.
-2.	The BloodAlchemy malware comes with a malicious DLL with the same name. This is placed in the directory of the BrDifaxpi.exe, and according to the search order of windows, this DLL is loaded before that. This is `DLL search order hijacking`.
-3.	This DLL opens a file called `DIFX` which resides in the same directory. This file is encrypted using `AES 128-bit CBC mode encryption`. The DLL decrypts this to reveal an `encrypted and compressed` shell-code. The DLL also has `Anti-Sandbox capabilities`, but the exact mechanisms aren’t provided.
-4.	The encryption is a custom one which uses the `FNV-1a` hashing algorithm and the compression is done using the `lznt1 compression algorithm`. The DLL decrypts and decompresses this to reveal the shell-code for a `backdoor`.
-5.	This backdoor is injected into a process like `svchost.exe`. This backdoor has functionality to uninstall itself, create registry keys for further persistence and send and receive information from the C2 server. The information received by the backdoor controls what the backdoor sends back to the C2, where its injected and uninstall commands. 
+2.	The BloodAlchemy malware comes with a malicious DLL with the same name. This is placed in the directory of the BrDifaxpi.exe, and according to the search order of windows, this DLL is loaded before that.
+>   This is `DLL search order hijacking`.
+4.	This DLL opens a file called `DIFX` which resides in the same directory. This file is encrypted using `AES 128-bit CBC mode encryption`. The DLL decrypts this to reveal an `encrypted and compressed` shell-code. The DLL also has `Anti-Sandbox capabilities`, but the exact mechanisms aren’t provided.
+5.	The encryption is a custom one which uses the `FNV-1a` hashing algorithm and the compression is done using the `lznt1 compression algorithm`. The DLL decrypts and decompresses this to reveal the shell-code for a `backdoor`.
+6.	This backdoor is injected into a process like `svchost.exe`. This backdoor has functionality to uninstall itself, create registry keys for further persistence and send and receive information from the C2 server. The information received by the backdoor controls what the backdoor sends back to the C2, where its injected and uninstall commands. 
 
 ### What this prototype does:
 1.	It contains a BrDifaxpi.exe file which loads a DLL BrLogAPI.dll. This DLL resides in the same directory as the BrDifaxpi.exe and it **not linked to DLL during compilation**. This is because I found it easier to just load the DLL using the _LoadLibraryA()_ function.
@@ -28,8 +29,10 @@
 -   DIFX.txt
 
 ### Additionally, the following assumptions have been made,
--	Victim’s computer has mingw installed (that is, the compiler g++ is present) and is added to path
--	Victim’s computer has python installed, along with the Crypto module (or an anaconda installation also works)
+
+> Victim’s computer has mingw installed (that is, the compiler g++ is present) and is added to path
+
+> Victim’s computer has python installed, along with the Crypto module (or an anaconda installation also works)
 
 Note that these are `not the necessary conditions for BloodAlchemy`, only for this prototype. The process injection of the backdoor does not require any of the assumptions.
 
